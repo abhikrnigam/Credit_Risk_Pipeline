@@ -4,19 +4,6 @@ import model
 import uvicorn
 from fastapi import FastAPI
 
-#object
-app = FastAPI()
-
-#on http://127.0.0.1:8000
-@app.get('/')
-def index():
-    return {'message': 'Hello,Users'}
-
-
-#on http://127.0.0.1:8000/xyz....
-@app.get('/Welcome')
-def get_name(name: str)
-    return{'Check your credit risk': f'{name}'}
 
 
 #run

@@ -8,13 +8,13 @@ Created on Tue Nov 17 21:40:41 2020
 # 1. Library imports
 import uvicorn
 from fastapi import FastAPI
-from BankNotes import BankNote
+from CreditRisk import CreditRiskData
 import numpy as np
 import pickle
 import pandas as pd
 # 2. Create the app object
 app = FastAPI()
-pickle_in = open("classifier.pkl","rb")
+pickle_in = open("model.pkl","rb")
 classifier=pickle.load(pickle_in)
 
 # 3. Index route, opens automatically on http://127.0.0.1:8000
@@ -31,7 +31,7 @@ def get_name(name: str):
 # 3. Expose the prediction functionality, make a prediction from the passed
 #    JSON data and return the predicted Bank Note with the confidence
 @app.post('/predict')
-def predict_banknote(data:BankNote):
+def predict_creditrisk(data:CreditRiskData):
     data = data.dict()
     age=data['age']
     income=data['income']
@@ -42,14 +42,12 @@ def predict_banknote(data:BankNote):
     rate=data['rate']
     status=data['status']
     percent_income=data['percent_income']
-    default=data['default']
     cred_length=data['cred_length']
-   # print(classifier.predict([[variance,skewness,curtosis,entropy]]))
-    prediction = classifier.predict([[age,income,home,emp_length,intent,amount,rate,status,percent_income,default,cred_length]])
+    prediction = classifier.predict([[age,income,home,emp_length,intent,amount,rate,status,percent_income,cred_length]])
     if(prediction[0]>0.5):
-        prediction="Fake note"
+        prediction = "Risky"
     else:
-        prediction="Its a Bank note"
+        prediction = "Not Risky"
     return {
         'prediction': prediction
     }
